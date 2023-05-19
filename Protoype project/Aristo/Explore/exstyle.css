@@ -34,7 +34,14 @@ section h1 {
     font-size: xx-large;
 }
 
-.section1{
+.section0 {
+    background-image: url(../Image-all/map.png);
+    background-repeat: no-repeat; 
+    margin: 0;
+    background-size: cover;
+}
+
+.section1 {
     background-image: url(../Image-all/egalit.jpg);
     background-repeat: no-repeat; 
     margin: 0;
