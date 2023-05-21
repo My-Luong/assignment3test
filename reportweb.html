@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+h1{color:black; 
+text-align:center;
+font:Arial}
+
+padding-top: 200 px
+padding-bottom: 200px
+  body {
+    min-height: 160rem
+  }
+  .fixed-top {
+    position: ;
+    top: 0;
+    right: 50vw;
+    z-index: 1000;
+  }
+</style>
+
+</head>
+
+<h1>Assignment 3</h1>
+<script>
+
+  class TOC {
+    
+    static parse(headingSet) {
+      const tocData = []
+      let curLevel = 0
+      let preTocItem = undefined
+
+      headingSet.forEach(heading => {
+        const hLevel = heading.outerHTML.match(/<h([\d]).*>/)[1]
+        const titleText = heading.innerText
+
+        switch (hLevel >= curLevel) {
+          case true:
+            if (preTocItem === undefined) {
+              preTocItem = new TocItem(titleText, hLevel)
+              tocData.push(preTocItem)
+            } else {
+              const curTocItem = new TocItem(titleText, hLevel)
+              const parent = curTocItem.level > preTocItem.level ? preTocItem : preTocItem.parent
+              curTocItem.parent = parent
+              if (parent !== undefined) {
+                parent.children.push(curTocItem)
+              }
+              preTocItem = curTocItem
+            }
+            break
+          case false:
+            
+            const curTocItem = new TocItem(titleText, hLevel)
+            while (1) {
+              if (preTocItem.level < curTocItem.level) {
+                preTocItem.children.push(curTocItem)
+                curTocItem.parent = preTocItem
+                preTocItem = curTocItem
+                break
+              }
+              preTocItem = preTocItem.parent
+
+              if (preTocItem === undefined) {
+                tocData.push(curTocItem)
+                preTocItem = curTocItem
+                break
+              }
+            }
+            break
+        }
+
+        curLevel = hLevel
+
+        if (heading.id === "") {
+          heading.id = titleText.replace(/ /g, "-").toLowerCase()
+        }
+        preTocItem.id = heading.id
+      })
+
+      return tocData
+    }
+
+    
+    static build(tocData) {
+      let result = "<ul>"
+      tocData.forEach(toc => {
+        result += `<li><a href=#${toc.id}>${toc.text}</a></li>`
+        if (toc.children.length) {
+          result += `${TOC.build(toc.children)}`
+        }
+      })
+      return result + "</ul>"
+    }
+  }
+
+ 
+  function TocItem(text, level, parent = undefined) {
+    this.text = text
+    this.level = level
+    this.id = undefined
+    this.parent = parent
+    this.children = []
+  }
+
+  window.onload = () => {
+
+    const headingSet = document.querySelectorAll("h1, h2, h3, h4") // You can also select only the titles you are interested in.
+    const tocData = TOC.parse(headingSet)
+    
+    console.log(tocData)
+
+    const tocHTMLContent = TOC.build(tocData)
+    const frag = document.createRange().createContextualFragment(`<fieldset class="fixed-top"><legend>TOC</legend>${tocHTMLContent}</fieldset>`)
+    document.querySelector(`body`).insertBefore(frag, document.querySelector(`body`).firstChild)
+  }
+</script>
+<h2>Team profile</h2>
+<body>
+<h3>Team name: nerd123</h3>
+<p>My name is Viet Hung (s4019303), I am a part of the team Nerds 123. When I was a kid I used to play around a lot with machines and technology, if I remember correctly none of my friends were interested in that. But later on in life, I realized that it was only human nature to want to understand something and be passionate about it. My passion for IT really started when I was introduced to the computer concept and networking. It was also a starting point in which my computer exploration hobby began. I have no particular helpful skill for working professionally for now but I hope to learn and gain many different skills.</p>
+<p>My name is Duong Quoc Viet (SID: 3980685). I am currently studying at RMIT as a freshman in the major of Information technology and I am a member of the team  The nerds 123. The motivation which made me take Information Technology as my major since I first moved to university is my solid belief in the ability of technology within the process of realizing my ideas. I usually immerse myself in commercial entrepreneur TV shows like Shark Tank since I'm still a high school student and it just inspires me a lot about doing something special and then bringing it to the world. Highschool is also the time when I started having my first idea of business regarding technology and after that I immediately embarked on digging into the fascinating and complex world of syntax and algorithms. Through the learning process, I have picked up plenty of interesting knowledge and tried to apply it into practice. However, in order to become a professional app-developer in future, it is necessary for me to sharpen different sets of skills and widen my knowledge about this field.</p>
+<p>My name Nguyen Viet Phap (SID: 4012986), I am a member of team nerds 123. These are some of my background. IT is my major. I am also a freshman student at RMIT. Some of my hobbies include going to the gym, participating in a variety of sports and learning programming. Coding and programming are things that I am always curious about . I find that information technology is very interesting and intriguing. Technology is a constantly growing field, it is involved in nearly every business, and IT jobs have a high earning potential. I love to study programs and how software works. Currently, my experience in this field is a little bit lacking so I am always looking forward to learning more about information technology.</p>
+<p>My name is Luong Thi Tra My (s3987023), and I also belong to the team Nerds 123. Currently, I am a first-year student at RMIT University Vietnam with a major in Information Technology. I chose this major because of some reason. First of all, I would like to explore and learn more about modern technologies, especially those which can have the capabilities to support me in my life including learning and living such as The latest versions of screen readers, applications on smartphones, or even smart glasses – a product of AI that can assist visually impaired people to move independently by warning signals about barriers for users to help them be safe when moving. I have had a profound comprehension about the significant roles of technologies and accessible tools with visual impairments, since I studied in high school. Therefore, I have attempted to discover more about the process of making applications or software as well as their effects on human life consisting of their benefits and drawbacks in order that I could have a deeper insight into their features and also know the use appropriately. Nevertheless, it will be a long journey to stand out in the IT field. In order to help my peers the best, I need to equip myself with a variety of knowledge and skills. The fact that my current experience is like programming, installing crucial software is not enough. It is only sufficient for me to satisfy my needs. As a result, I decided to study for a Bachelor’s degree of Information Technology at RMIT University Vietnam with the desire of being provided specialized knowledge and skills in this area. Finally, I strongly believe that my impassion and perseverance will help me to overcome all challenges and difficulties in this major as well as fulfill my objective.</p>
+<h2>Project description</h2>
+<h3>Overview</h3>
+<h4>Topic</h4>
+<ul>
+  <li>
+  Big picture: Game industry is a sector that encompasses the development, publishing, and distribution of video games. It is a multi-billion dollar industry that continues to grow rapidly without any slight sign of slowing down because of its features of creativity and entertainment . In the perspective of Video game companies or Gaming device productors, As they find changes in their community, making a video game is no longer just basically a production of imagination. The resurgence of technological advancements and expansion of gaming platforms make the factor of following trends is also gradually becoming compulsory.
+  </li>
+  <li>
+  Outcome: Despite the adaptation being necessary, our team recognized that many companies had strategized that in the wrong way. A product should keep its core value as it is a precondition that makes the target customer come toward their game. With the purpose of enhancing the interest of users about the game, and satisfying their curiosity, we decided to carry out a project that is to create a website called The World of Aristio as a trustworthy channel for people who have the passion for playing and discovering about games. worldofaristio.com is a website that exists as an encyclopedia which provides all informations about the game. This website displays not just a brief overview of the game including its genre, storyline, and key features, but it really brings them a whole world of fantasy in the most detailed way. Everything will be explained in a most clear way and this should give potential players a sense of what the game is about and what they can expect. Moreover, it also has the ability to make stories become more attractive with users and therefore helps them to comprehend more about the game and the story inside it so that they can immerse themselves in the game when playing.
+  </li>
+</ul>
+<br>
+<hr>
+<h3>Motivations</h3>
+<p>The game industry has been proved that even though it is a young industry, it can still skyrocketed and reach its potential. This was contributed by a really dynamic community encompassing gamers and game makers. However in current days, with the resurgence of technology advancements and gaming platforms, the game makers and game players have changed in many different ways. Following Trend could be a double-edged sword when high-tech graphic tools or Game Design Software could make the game experience of the player improved but on the other hand, other parts of the game normally fail to show their proper importance. For instance, an ineffective game advertising website called <q>SuperHeroQuestGame.com</q>. Despite promising an immersive superhero adventure game with stunning graphics and a unique combat system, the website fell short in delivering sufficient information. It lacked details about the storyline, characters, and special features of the game. Additionally, there were no actual images or videos showcasing the gameplay, and the absence of user reviews or community feedback further diminished its effectiveness. The website failed to generate excitement or provide compelling reasons for users to explore the game further. This is also the main point when players both want to maximize the gaming experience and have a certain excitement when starting to learn about the game. As a result, the idea of the website <q>worldofaristo.com</q> was born to help potential players of the game <q>World Of Aristo</q> find themself evolving, understanding and overwhelmed in front of the whole world of fantasy.</p>
+<br>
+<hr>
+<h3>Landscape</h3>
+<p>The game industry is vast because of its multi-platform, the same with Movie, Music or any Modern Field. Because of that, there are plenty of opportunities for not just Big Producer but also indie game makers. They are all to some extent  interested in showing players what they can expect from the game or somewhere that conveys their message. This is some game that have a impressive official website:</p>
+<br>
+<ol>
+  <li><q>The Witcher 3: Wild Hunt</q>: The official website of this game has a stunning                                design, using excellent graphics and images to recreate the game's world.</li>
+<li><q>Assassin's Creed Valhalla</q>: The website of this game has a strong Viking theme with a beautiful interface, fitting music, and provides useful information about the game.</li>
+<li><q>Red Dead Redemption 2</q>: The website of this game creates a space that captures the feeling of the wild west, with beautiful and immersive graphics.</li>
+<li><q>Overwatch</q>: The official website of Overwatch has a modern and visually appealing interface, providing an exciting experience for players.</li>
+<li><q>Fortnite</q>: Fortnite has a website with a fun and creative design, vibrant colors, and regular updates on the game and the Fortnite community.</li>
+<li><q>God of War</q>: The website of the game God of War uses impressive animations and powerful music to give players an exhilarating feeling.</li>
+<li><q>Horizon Zero Dawn</q>: The official website of this game has a beautiful design with stunning landscape images and detailed information about the game's world.</li>
+</ol>
+<br>
+<hr>
+<h3>Detailed Description</h3>
+<h4>1.Aims</h4>
+<p>The aim of the project is to create a website as an encyclopedia about the game which can satisfy users concerns about the game. This website will provide them with a credible source to explore all aspects of the game before intending to play. Additionally, it also raises users interests in stories, characters of each game and gives them the realest look about the whole world of fantasy. To do that, we set specific goals to make our project successful.</p> 
+<p>The first goal is to appeal to users to know and use our website. This is a crucial factor to maintain activities as well as further necessary improvements for the project. Targeted users will include people at various ages such as adults, teenagers, children or even older people. Besides, we also desire to catch professional gamers eyes to use our website because their specialized contribution when using will help us to improve our website the best. </p>
+<p>The second goal is to supply overall information about the game comprising its genre, main content, key features, source as well as its developer. Through this website, users will have the opportunity to explore all characteristics of a specific game before choosing to play. Thanks to that prior understanding about the game surely brings users an interesting experience since they can feel attractive stories behind each character or even immerse themselves in it. As a result, it will increase the interest of players in games, especially fantasy games. </p>
+<h4>2.Plans and progress</h4>
+<p>Planning and Strategizing are the essential steps for any success project because it will decide the many other factors related to Resource Allocation, Risk Mitigation, Task Sequencing, Communication..ect which directly contribute to the operational effectionally of the project. In this project, understanding that had led us to the idea of building a very detailed plan for the project and also for each member in our team. In this part, we will describe the main parts of our project, including: the story of the project ; the main stages of the project and what happens inside it ( decisions, changes, some dead ends). </p>
+<p>The original story of our team about creating a promoting website starts when the assignment 2 first released. At that time, in order to choose the topic for IT production, which is clearly a crucial part because there are plenty of factors that need to be taken into account such as: scope and limit, limited knowledge and skills, type of product, ect. After many negotiations, we decided to jump into creating a 3D game named  The world of Aristo, which concluded with a fantasy world and an interesting plot. In the beginning, everything seemed to be totally fine when we sat together for hours just to plan for the plot, character and the communicating is extremely great as we have a common interest in video games. However, after we know that there is a requirement for a prototype, we know that we don't have enough knowledge and skills to materialize our idea. That is a tough time for our team as we were really dedicated and ambitious with this project and we also nearly ran out of time as there is a huge amount of time that we spend on it. We immediately sat together again to change our strategy toward the project with the intention of taking advantage of the old project. Finally, The idea was turned into TheWorldOfAristo.com a website based on the idea of our old game The World Of Aristo, which would provide all the necessary information for players about the world, characters, news updates, community,ect. </p>
+
+<p>There are 5 main parts in our progress of producing an IT project, which include: Project Initiation, Project Planning, Requirement Planning, Design and Architecture, Development and Implementation, Testing and Quality assurance. Here is the detailed description of our progress:</p>
+
+<p>1.Project Initiation: This stage involves identifying the need for the IT project, our team defining the project objectives, and establishing its feasibility. It includes activities such as conducting a feasibility study, defining project scope. As our team recognized the features of the product and had a clear understanding about our knowledge & ability, we were able to have a proper scope for the project. This has helped us in the Planning progress as we already know exactly what part will exist on the website.</p>
+
+<p>2.Project Planning: In this stage, our team develops a comprehensive project plan that outlines the project's timeline, resources, deliverables, and activities required to achieve the project objectives. This includes defining project milestones, creating a work breakdown structure and estimating effort. In this part, everything of a project must be considered carefully as one misleading indication of project manager could lead to a domino in operational efficiency. Understanding this, our project manager had split the tasks for each member based on their strong suit and their willingness. This allows everyone to do their best with the utmost dedication and also help their extralearning become easier because each person just needs to learn specific parts. When it comes to the project's timeline, the project manager has to find out who is available for the project and how busy their schedules are for this one. Doing so has helped us create a project timeline and determine timeframes for each milestone. In terms of communication, we choose to have a face-to-face once per week (depending on the available time of each member each week) and other multiple types of meeting to increase the flexibility of communicating.</p>
+
+<p>3.Design and Architecture: Based on the gathered requirements, our team designs the system architecture and creates a detailed design specification. This includes designing the user interface, database structure and software components.The design and architecture phase of an IT project involves creating a blueprint for the system to be developed. Our time begins with reviewing the project requirements and understanding its objectives. We then design the system architecture, identifying major components and their interactions. Detailed design follows, specifying interfaces, data structures, algorithms, and logic for each component. User interface design is created for projects with a UI, while database design is developed for projects involving data storage. Integration points and protocols are designed for system integration requirements. The selection of appropriate technologies, frameworks, and tools is also considered. Documentation is created to capture design decisions and communicate them to the team. Design reviews and iterative refinements ensure the design meets requirements and best practices. Collaboration and communication among team members are alway vital throughout the process.</p>
+
+<p>4.Development and Implementation: The development stage involves coding and building the IT project according to the design specifications. It includes activities such as writing code, developing software modules, configuring hardware and software infrastructure, and conducting unit testing. In this part, our team translates the design into code, customizes existing software if needed, and integrates different components. Thorough testing is conducted to ensure quality, and the software is deployed to the production environment. We also have to do extralearning throughout the process because as a freshman, we are unfamiliar with many new technologies or even new programming languages. </p>
+
+<p>5.Testing and Quality Assurance: Once the development is complete, the IT project undergoes various testing activities to ensure its functionality, reliability, and performance. This includes unit testing, integration testing, system testing, and user acceptance testing. Quality assurance activities, such as code reviews and bug fixing, are also performed during this stage. In this part, our team creates test plans, and test cases are executed to verify functionality, performance, security, and usability. Quality assurance activities, including code reviews and process adherence, are performed as it is helpful to prevent regression issues, and lessons learned contribute to continuous improvement. Collaboration and communication are vital throughout the testing phase to ensure a successful outcome.</p>
+
+<h4>3.Roles</h4>
+<h4>4.Scope and Limits</h4>
+<p>In this project, we will create a website as an encyclopedia about games which provide users with all necessary information related to the games consisting of game developer, latest updated versions, genre, story, and key features. Furthermore, this website also has videos and screenshots to help users have the most intuitive look about the game and instruct them how to play it. Moreover, we desire to implement the community feature as an interactive environment for players for discuss, share their concerns about the game. Additionally, it also has the support center feature as a mean for players to look for help when having any issues during the playing process so that they can address their temporary problems immediately. These are all features for our website which will be evolved.
+A wide range of tasks that have to be completed, while the time is limited. Therefore, we will only implement some main features as a prototype of this website based on our time available. These will comprise several key features at the basic level. The prototype will show users some basic information about the game such as the developer, its category, brief overview of the game, link to download, description of each character in the game as well as its own story so that people can have prior understanding about the concept we are intending to do when looking at our demo. Besides, for more sophisticated features in our project like the community and support center features may not be included because of limited time. If we would like to develop the community and support center, we will need to do a plenty of tasks including collecting data, creating the login feature for users, maximizing efficiency of the website and restricting breakdowns when having too many people access at the same time. Building a perfect website is a long process and it requires more expertise and experience. Therefore, for first-year students like us, these complicated features above are still limits of our project at the current time.</p> 
+<h4>5.Tools and Technologies</h4>
+<p>The project requires the use of specific software and other tools. Primarily, we need to use a text editor such as Notepad, PyCharm or VS Code for writing HTML web pages, CSS and JavaScript as well. In particular, HTML will be used for the aim of writing web pages, CSS for styling those pages. Additionally, programming languages such as Python, PHP or SQL will also be made use of for processing data, handling files in the back-end part. Moreover, we use Git to write commands for changes of files in the repository as well as an online tool like Github which will help us to store our project and collaborate with each other effectively. Besides, due to using Github for collaborating, we will work on our own laptop. Those are all necessary tools for us to embark on our project. Based on these tools, our group has had some experience in using HTML, CSS, Python as well as text editors such as VS Code, Notepad and PyCharm. Therefore, we can use them flexibly to accomplish our website as well as possible.</p>
+<h4>6.Testing</h4>
+<h4>7.Timeframe</h4>
+<h4>8.Risks</h4>
+<p>To build a successful project, it requires the combination of different factors including technologies, tools, software, hardware or even the relationship among team members in the group. Therefore, we always try to define any risks clearly that we may face during the project execution process. To begin with the risks related to technologies. Writing codes for the website sometimes have errors because of wrong syntax or lack of several HTML tag elements which can cause semantic errors. Consequently, the website may not work or give the results in contrast to what is expected. Additionally, the risk that the website may run with a low speed, possibly happens because of some technical issues. Therefore, it requires absolute accuracy during the coding process to avoid risks happening. Besides, strongly paying attention to the content of the website but does not make it an obvious and attractive performance also lead the project to be less appealing to users and decrease the success of the project. In addition to technical problems, arguments among team members about the idea, plan and how to execute it may put the project at the risk of failure, or more slightly, it can decrease the project progress and make it not be accomplished on time. In this situation, the role of a leader or a project manager is extremely important since he will know how to combine all different ideas to create the most perfect idea and then implement it effectively. These are all risks that can happen with our project. However, we are trying to minimize it so that our website can achieve the best results.</p>
+<h4>9.Group processes and communications</h4>
+<p>Communication is invariably the most important aspect in the teamwork environment to maintain the connection among team members and help the group achieve the final objective. To do that, we always try to increase the contact among members by different ways such as meetings, text messages. For meetings, we combine between face-to-face and online meetings through Google Meet. Due to the special situation of a member in our team, we have chosen the most convenient way to communicate so that our group can work easily and frequently. Normally, we have set up a meeting once a week and each meeting often lasts for about one and a half hours to three hours. In these meetings, we discuss ideas to do group assignments and delegate specific tasks to each member in order that we can finish our work on deadline. In addition to holding weekly meetings together, we also set up a group chat on Messenger so that we can discuss extra information or issues related to our assignment during the working process more regularly. From our perspective, the maintenance of two means of communication simultaneously will help us to minimize the state of disconnection among members and also avoid affecting the common working progress of our group. This will be a significant key for our group to finish the assignments with good results.</p>
+<p>Communication is invariably the most important aspect in the teamwork environment to maintain the connection among team members and help the group achieve the final objective. To do that, we always try to increase the contact among members by different ways such as meetings, text messages. For meetings, we combine between face-to-face and online meetings through Google Meet. Due to the special situation of a member in our team, we have chosen the most convenient way to communicate so that our group can work easily and frequently. Normally, we have set up a meeting one times a week and each meeting often lasts for about one and a half hours to three hours. In these meetings, we discuss ideas to do group assignments and delegate specific tasks to each member in order that we can finish our work on deadline. In addition to holding weekly meetings together, we also set up a group chat on Messenger so that we can discuss extra information or issues related to our assignment during the working process more regularly. From our perspective, the maintenance of two means of communication simultaneously will help us to minimize the state of disconnection among members and also avoid affecting the common working progress of our group. This will be a significant key for our group to finish the assignments with good results.</p>
+<h2>Skills and Jobs</h2>
+<p>To make our project work effectively and productively for the concept of building a website, we need to employ four positions including front-end developer, back-end developer, UI designer, and quality assurance engineer.</p>
+<h3>1.Front-End Developer</h3>
+<p>Job description: A front-end developer is a person who will collaborate with a team of four members to build a website providing information related to games. This position takes responsibility for creating a website including coding, designing layout for the website as well as updating their codes periodically to make our website as perfect as possible and also ensure security standards for the website. Besides, the developer also is in charge of managing, uploading content for our website, particularly contents related to new features, latest updates and others. To do that, they need to use development tools to write and test code for the aim of developing solutions. Additionally,this position also makes sure that all users and computers have access to the content of this website. Besides, this developer needs to meet with the manager of the team to report about the working progress of the project regularly in order that the manager can manipulate and solve any possible issues.</p>
+<p>Skills:</p>
+<p> skills:</p>
+<p>Proficiency in markup languages, particularly HTML, CSS  JavaScript</p>
+<p>Understanding of search engine optimization (Spractices</p>
+<p>Solution-oriented and high-level programming skills</p>
+<p>Having the capability troubleshooting and optimizing web pages for security and responsiveness</p>
+<p>Comprehension of network diagnostics and analytical tools </p>
+<p>Soft skills:</p>
+<p>The ability to collaborate with other members in the team effectively</p>
+<p>Good communication skills</p>
+<p>English fluency</p>
+<p>Eagering to learn</p>
+<p>Self-discipline</p>
+<p>Ability to work independently</p>
+<p>Good time managemenskill</p>
+<p>Qualification: </p>
+<p>Applicants for this position need to have a bachelor degree in Computer Science or equivalent</p>
+<p> from extra courses organized by well-known tech corporations such as Google, Microsoft is a plus.</p>
+<p>Experience:</p>
+<p>At least one or two years of experience in web development</p>
+<h3>2.Back-End Developer</h3>
+<p>Job description: The second position we would like to employ for our team is a back-end developer. This person will mainly work closely with database, data processing and integration with third-party services. In our website, the database is particularly about games including its features, its videos, updated versions, use and stories of each character in the game. All information will be stored in the database and be useful for users when they search and retrieve information. Therefore, his duty is to make sure that the data is processed and exchanged in a secure and efficient manner. In addition to this, a back-end developer is also in charge of storing, updating as well as deleting data from the database. In short, this position is one of the important parts in our team in corporate with a front-end developer, a UI designer and a quality assurance engineer to build a successful website and help it work the most productively.</p>
+<p>Skills:</p>
+<p>Professional skills:</p>
+<p>Proficiency in one of programming languages such as Java, Python, PHP, .Net.</p>
+<p>Deep understanding of the web development cycle, programming techniques and tools</p>
+<p>Soft skills:</p>
+<p>English fluency</p>
+<p>Good communication skills</p>
+<p>Effective team work skills</p>
+<p>Good time management skills</p>
+<p>Excellent problem solving skills</p>
+<p>Responsibility for work </p>
+<p>Qualification: A bachelor degree in Computer Science, Computer Programming or equivalent</p>
+<p>Experience:</p>
+<p>At least one or two years of hands-on experience are expected</p>
+<p>Having worked on projects about building websites as a back-end developer.</p>
+<h3>3.UI Designer </h3>
+<p>Job description: Our project is looking for the position as a UI designer who will be in charge of user interface design for our website so that it can bring the best experience for users. The duty of this position is to maximize the performance of the website. He will take responsibility for creating, and implementing a user interface that is intuitive and right look, Then he will present his visual design to the web developer in the team so that they can recreate it by coding. Besides,  A UI designer also needs to ensure that all interactions are intuitive and easy to access for users. This person will design graphic user interface elements like menus, tabs, forms and others. Furthermore, researching, analyzing data or feedback from users are also the work of UI designers in order to address any problem and persist in raising users’ visual experience. This duty is extremely significant for our website because we intend to have a support center in it and we are attempting to create a community for players who are interested in games. </p>
+<p>Skills:</p>
+<p>Professional skills:</p>
+<p>Proficiency in at least one of the following industrial standards such as Figma. Sketch</p>
+<p>Knowledge and skills including photoshop, illustrator, dreamweaver</p>
+<p>Soft skills:</p>
+<p>Good teamwork and communication skill</p>
+<p>English proficiency</p>
+<p>Being creative</p>
+<p>Critical thinking and problem solving skills</p>
+<p>Good time-management skills</p>
+<p>Self-discipline</p>
+<p>Having high responsibility for work</p>
+<p>Willing to learn new things and listen colleagues contribution </p>
+<p>Qualification: A bachelor’s degree in Design, Computer Science, or a related area is required.</p>
+<p>Experience: Hands-on experience in the position of a UI designer at least two or three years</p>
+<h3>4.Quality Assurance Engineer </h3>
+<p>Job description: To make sure the website works well before being available on the Internet for users, we need to find a quality assurance engineer who will be responsible for ensuring the functionality and quality of our website. This position will make strict testing plans, procedures, and perform testing activities to identify and address any bugs, errors, defects as well as potential issues. Besides, a quality assurance engineer also needs to cooperate closely with the web developer to track bugs and verify fixes so that the testing process can reach the best result. Furthermore, this position also plays an integral part in recommending solutions, improvements or any updates for other teammates to accomplish the website. Ultimately, a quality assurance person will write the testing report and report any related problems to the project manager so that he or she can catch up with the progress of the project as well as its quality. </p>
+<p>Skills:</p>
+<p>Professional skills:
+<p>Deep knowledge of test automation tools and manual testing practices</p>
+<p>Having knowledge and skills about programming languages and markup languages such as HTML, CSS, JavaScript</p>
+<p>Proficiency in best practices for assessing, evaluating, version control and defect management</p>
+<p>Deep understanding of web development </p>
+<p>Soft skills:</p>
+<p>Excellent analytical and problem solving skills</p>
+<p>Good communication skills</p>
+<p>Good teamwork skills</p>
+<p>Time-management skills</p>
+<p>English proficiency for work</p>
+<p>Being thorough in testing process</p>
+<p>Enthusiasm and interest in identifying bugs, fixing bugs</p>
+<p>Good writing report skills</p>
+<p>Qualification: A bachelor degree in Computer Science, Information System or equivalent degree in the IT field.</p>
+<p>Experience: At least four years of experience in the position of quality assurance engineer, tester or similar jobs</p>
+<h2>Group reflection</h2>
+<h3>1.Individual reflection</h3>
+<p>My: Going through nearly two months to collaborate with each other in group assignments, I not only had time to evaluate precisely my capability in the teamwork environment, but also had the interesting experience during this journey. First of all, I was more confident in my competence because I was completely able to contribute to almost all work that my group had to accomplish in the assignments. In particular, I participated in writing reports, coding for the HTML web page, or contributing some ideas related to content of the reports and how to display it in the most logical way. Despite having some good points, I realized that I still need to enhance myself in several areas such as learning JavaScript to serve the aim of creating a complicated website, increasing interaction with other teammates so that my disability will not be my big obstacle in the learning process, especially teamwork activities. When working in our group, I was actually impressed by the support of all members for me. Particularly, due to my inconvenience, I had online meetings with them instead of going face-to-face. Besides, I also had the chance to do suitable tasks with my ability like writing reports, coding for the text parts of HTML web pages because of my difficulties in working with images. As a result, this has helped me to work effectively and accomplish my tasks well. Through this working process, I have deeply understood that the collaboration and support among team members in a group is extremely crucial, it is the most primary factor to make the group work effectively and achieve the best results with the goals we set. </p>
+<h3>2.Group reflection</h3>
