@@ -50,7 +50,7 @@ li a {
     font-size: large;
 }
 
-li .character {
+li .explore {
     background-color: hsla(0, 0%, 0%, 0.2);
     color: deepskyblue;
 }
@@ -61,36 +61,25 @@ li > a:hover {
 
 }
 
-.main {
-    display: flex;
+.box {
+    justify-content: center;
+    padding-left: 150px;
+    padding-right: 200px;
 }
 
-.info {
+.box h1{
     color: white;
-    padding: 80px;
-    justify-content: center;
+    padding: 10px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: large;
     text-align: center;
-    
-    
-}
-
-.main img{
-    width: 200px;
-    height: 400px;
-    object-fit: cover;
-}
-
-.box {
-    justify-content: center;
-    
 }
 
 .box p {
     color: white;
-    padding: 120px;
+    padding: 10px, 50px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: large;
     text-align: justify;
+    
 }
