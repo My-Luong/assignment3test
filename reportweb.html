@@ -113,7 +113,7 @@
     console.log(tocData)
 
     const tocHTMLContent = TOC.build(tocData)
-    const frag = document.createRange().createContextualFragment(`<fieldset class="fixed-top"><legend>TOC</legend>${tocHTMLContent}</fieldset>`)
+    const frag = document.createRange().createContextualFragment(`<fieldset class="fixed-top"><legend>TABLE OF CONTENT</legend>${tocHTMLContent}</fieldset>`)
     document.querySelector(`body`).insertBefore(frag, document.querySelector(`body`).firstChild)
   }
 </script>
