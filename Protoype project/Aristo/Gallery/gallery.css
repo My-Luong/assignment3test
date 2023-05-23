@@ -48,7 +48,7 @@ li a {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: large;
 }
-li .news {
+li .gallery {
     background-color: hsla(0, 0%, 0%, 0.2);
     color: deepskyblue;
 }
@@ -56,4 +56,18 @@ li .news {
 li > a:hover {
     background-color: hsla(0, 0%, 0%, 0.2);
 
+}
+#image > .pic {
+    width: 25vmin;
+    height: 58vmin;
+    object-fit: cover;
+    object-position: 100% 50%;
+}
+#image { 
+    display: flex;
+    gap: 4vmin;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(0%, -50%)
 }
